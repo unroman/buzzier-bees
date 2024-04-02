@@ -1,21 +1,28 @@
 package com.teamabnormals.buzzier_bees.core.registry;
 
+import com.teamabnormals.blueprint.core.api.BlockSetTypeRegistryHelper;
 import com.teamabnormals.blueprint.core.util.PropertyUtil;
 import com.teamabnormals.blueprint.core.util.item.CreativeModeTabContentsPopulator;
 import com.teamabnormals.blueprint.core.util.registry.BlockSubRegistryHelper;
 import com.teamabnormals.buzzier_bees.common.block.*;
 import com.teamabnormals.buzzier_bees.core.BuzzierBees;
+import com.teamabnormals.buzzier_bees.core.other.BBConstants;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 
 import static net.minecraft.world.item.CreativeModeTabs.*;
 import static net.minecraft.world.item.crafting.Ingredient.of;
@@ -40,8 +47,14 @@ public class BBBlocks {
 	public static final RegistryObject<Block> HONEYCOMB_DOOR = HELPER.createBlock("honeycomb_door", () -> new HoneycombDoorBlock(BBBlockProperties.HONEYCOMB_DOOR));
 	public static final RegistryObject<Block> HONEYCOMB_TRAPDOOR = HELPER.createBlock("honeycomb_trapdoor", () -> new HoneycombTrapDoorBlock(BBBlockProperties.HONEYCOMB_TRAPDOOR));
 
-	public static final RegistryObject<Block> SOUL_CANDLE = HELPER.createBlock("soul_candle", () -> new SoulCandleBlock(BBBlockProperties.SOUL_CANDLE));
-	public static final RegistryObject<Block> SOUL_CANDLE_CAKE = HELPER.createBlockNoItem("soul_candle_cake", () -> new SoulCandleCakeBlock(SOUL_CANDLE.get(), BBBlockProperties.SOUL_CANDLE_CAKE));
+	public static final RegistryObject<Block> SOUL_CANDLE = HELPER.createBlock("soul_candle", () -> new SpecialCandleBlock(BBConstants.SMALL_SOUL_FIRE_FLAME, BBBlockProperties.SOUL_CANDLE));
+	public static final RegistryObject<Block> SOUL_CANDLE_CAKE = HELPER.createBlockNoItem("soul_candle_cake", () -> new SpecialCandleCakeBlock(SOUL_CANDLE.get(), BBConstants.SMALL_SOUL_FIRE_FLAME, BBBlockProperties.SOUL_CANDLE_CAKE));
+
+	public static final RegistryObject<Block> ENDER_CANDLE = HELPER.createBlock("ender_candle", () -> new SpecialCandleBlock(BBConstants.SMALL_ENDER_FIRE_FLAME, BBBlockProperties.ENDER_CANDLE));
+	public static final RegistryObject<Block> ENDER_CANDLE_CAKE = HELPER.createBlockNoItem("ender_candle_cake", () -> new SpecialCandleCakeBlock(ENDER_CANDLE.get(), BBConstants.SMALL_ENDER_FIRE_FLAME, BBBlockProperties.ENDER_CANDLE_CAKE));
+
+	public static final RegistryObject<Block> CUPRIC_CANDLE = HELPER.createBlock("cupric_candle", () -> new SpecialCandleBlock(BBConstants.SMALL_CUPRIC_FIRE_FLAME, BBBlockProperties.CUPRIC_CANDLE));
+	public static final RegistryObject<Block> CUPRIC_CANDLE_CAKE = HELPER.createBlockNoItem("cupric_candle_cake", () -> new SpecialCandleCakeBlock(CUPRIC_CANDLE.get(), BBConstants.SMALL_CUPRIC_FIRE_FLAME, BBBlockProperties.CUPRIC_CANDLE_CAKE));
 
 	public static final RegistryObject<Block> BUTTERCUP = HELPER.createBlock("buttercup", () -> new ButtercupBlock(BBMobEffects.SUNNY, 12, BBBlockProperties.FLOWER));
 	public static final RegistryObject<Block> WHITE_CLOVER = HELPER.createBlock("white_clover", () -> new FlowerBlock(() -> MobEffects.UNLUCK, 6, BBBlockProperties.FLOWER));
@@ -61,20 +74,37 @@ public class BBBlocks {
 				.addItemsAfter(of(Blocks.HONEY_BLOCK), CRYSTALLIZED_HONEY_BLOCK)
 				.addItemsAfter(of(Blocks.LILY_OF_THE_VALLEY), WHITE_CLOVER, PINK_CLOVER, BUTTERCUP)
 				.tab(FUNCTIONAL_BLOCKS)
-				.addItemsAfter(of(Blocks.PINK_CANDLE), SOUL_CANDLE)
+				.addItemsAfter(modLoaded(Blocks.CANDLE, "caverns_and_chasms"), CUPRIC_CANDLE)
+				.addItemsAfter(modLoaded(Blocks.CANDLE, "endergetic"), ENDER_CANDLE)
+				.addItemsAfter(of(Blocks.CANDLE), SOUL_CANDLE)
 				.addItemsAfter(of(Blocks.END_ROD), HONEY_LAMP);
 	}
 
+	public static Predicate<ItemStack> modLoaded(ItemLike item, String... modids) {
+		return stack -> of(item).test(stack) && BlockSubRegistryHelper.areModsLoaded(modids);
+	}
+
 	public static class BBBlockProperties {
-		public static final BlockSetType HONEYCOMB = BlockSetType.register(new BlockSetType(BuzzierBees.MOD_ID + ":honeycomb", true, SoundType.CORAL_BLOCK, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundEvents.WOODEN_BUTTON_CLICK_ON));
+		public static final BlockSetType HONEYCOMB = BlockSetTypeRegistryHelper.register(new BlockSetType(BuzzierBees.MOD_ID + ":honeycomb", true, SoundType.CORAL_BLOCK, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundEvents.WOODEN_BUTTON_CLICK_ON));
 
 		public static final BlockBehaviour.Properties FLOWER = BlockBehaviour.Properties.of().noOcclusion().noCollission().instabreak().sound(SoundType.GRASS);
 		public static final BlockBehaviour.Properties FLOWER_POT = BlockBehaviour.Properties.of().instabreak().noOcclusion();
-		public static final BlockBehaviour.Properties SOUL_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SoulCandleBlock.DIM_LIGHT_EMISSION);
-		public static final BlockBehaviour.Properties SOUL_CANDLE_CAKE = BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY).lightLevel((state) -> state.getValue(BlockStateProperties.LIT) ? 2 : 0);
 		public static final BlockBehaviour.Properties CRYSTALLIZED_HONEY = BlockBehaviour.Properties.of().noOcclusion().friction(0.98F).strength(0.3F).sound(SoundType.GLASS);
 		public static final BlockBehaviour.Properties HONEYCOMB_BRICKS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(2.0F, 6.0F).sound(SoundType.CORAL_BLOCK);
 		public static final BlockBehaviour.Properties HONEYCOMB_DOOR = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties HONEYCOMB_TRAPDOOR = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY).isValidSpawn(PropertyUtil::never);
+
+		public static final BlockBehaviour.Properties SOUL_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SpecialCandleBlock.DIM_LIGHT_EMISSION);
+		public static final BlockBehaviour.Properties SOUL_CANDLE_CAKE = BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY).lightLevel(getLightValueLit(2));
+
+		public static final BlockBehaviour.Properties ENDER_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(CandleBlock.LIGHT_EMISSION);
+		public static final BlockBehaviour.Properties ENDER_CANDLE_CAKE = BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY).lightLevel(getLightValueLit(3));
+
+		public static final BlockBehaviour.Properties CUPRIC_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SpecialCandleBlock.DIM_LIGHT_EMISSION);
+		public static final BlockBehaviour.Properties CUPRIC_CANDLE_CAKE = BlockBehaviour.Properties.copy(Blocks.CAKE).lightLevel(getLightValueLit(2));
+
+		private static ToIntFunction<BlockState> getLightValueLit(int lightValue) {
+			return (state) -> state.getValue(BlockStateProperties.LIT) ? lightValue : 0;
+		}
 	}
 }
