@@ -56,12 +56,12 @@ public class BBBlocks {
 	public static final RegistryObject<Block> CUPRIC_CANDLE = HELPER.createBlock("cupric_candle", () -> new SpecialCandleBlock(BBConstants.SMALL_CUPRIC_FIRE_FLAME, BBBlockProperties.CUPRIC_CANDLE));
 	public static final RegistryObject<Block> CUPRIC_CANDLE_CAKE = HELPER.createBlockNoItem("cupric_candle_cake", () -> new SpecialCandleCakeBlock(CUPRIC_CANDLE.get(), BBConstants.SMALL_CUPRIC_FIRE_FLAME, BBBlockProperties.CUPRIC_CANDLE_CAKE));
 
-	public static final RegistryObject<Block> BUTTERCUP = HELPER.createBlock("buttercup", () -> new ButtercupBlock(BBMobEffects.SUNNY, 12, BBBlockProperties.FLOWER));
-	public static final RegistryObject<Block> WHITE_CLOVER = HELPER.createBlock("white_clover", () -> new FlowerBlock(() -> MobEffects.UNLUCK, 6, BBBlockProperties.FLOWER));
-	public static final RegistryObject<Block> PINK_CLOVER = HELPER.createBlock("pink_clover", () -> new FlowerBlock(() -> MobEffects.UNLUCK, 12, BBBlockProperties.FLOWER));
-	public static final RegistryObject<Block> POTTED_WHITE_CLOVER = HELPER.createBlockNoItem("potted_white_clover", () -> new FlowerPotBlock(WHITE_CLOVER.get(), BBBlockProperties.FLOWER_POT));
-	public static final RegistryObject<Block> POTTED_PINK_CLOVER = HELPER.createBlockNoItem("potted_pink_clover", () -> new FlowerPotBlock(PINK_CLOVER.get(), BBBlockProperties.FLOWER_POT));
-	public static final RegistryObject<Block> POTTED_BUTTERCUP = HELPER.createBlockNoItem("potted_buttercup", () -> new FlowerPotBlock(BUTTERCUP.get(), BBBlockProperties.FLOWER_POT));
+	public static final RegistryObject<Block> BUTTERCUP = HELPER.createBlock("buttercup", () -> new ButtercupBlock(BBMobEffects.SUNNY, 12, PropertyUtil.flower()));
+	public static final RegistryObject<Block> WHITE_CLOVER = HELPER.createBlock("white_clover", () -> new FlowerBlock(() -> MobEffects.UNLUCK, 6, PropertyUtil.flower()));
+	public static final RegistryObject<Block> PINK_CLOVER = HELPER.createBlock("pink_clover", () -> new FlowerBlock(() -> MobEffects.UNLUCK, 12, PropertyUtil.flower()));
+	public static final RegistryObject<Block> POTTED_WHITE_CLOVER = HELPER.createBlockNoItem("potted_white_clover", () -> new FlowerPotBlock(WHITE_CLOVER.get(), PropertyUtil.flowerPot()));
+	public static final RegistryObject<Block> POTTED_PINK_CLOVER = HELPER.createBlockNoItem("potted_pink_clover", () -> new FlowerPotBlock(PINK_CLOVER.get(), PropertyUtil.flowerPot()));
+	public static final RegistryObject<Block> POTTED_BUTTERCUP = HELPER.createBlockNoItem("potted_buttercup", () -> new FlowerPotBlock(BUTTERCUP.get(), PropertyUtil.flowerPot()));
 
 	public static void setupTabEditors() {
 		CreativeModeTabContentsPopulator.mod(BuzzierBees.MOD_ID)
@@ -87,20 +87,18 @@ public class BBBlocks {
 	public static class BBBlockProperties {
 		public static final BlockSetType HONEYCOMB = BlockSetTypeRegistryHelper.register(new BlockSetType(BuzzierBees.MOD_ID + ":honeycomb", true, SoundType.CORAL_BLOCK, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundEvents.WOODEN_BUTTON_CLICK_ON));
 
-		public static final BlockBehaviour.Properties FLOWER = BlockBehaviour.Properties.of().noOcclusion().noCollission().instabreak().sound(SoundType.GRASS);
-		public static final BlockBehaviour.Properties FLOWER_POT = BlockBehaviour.Properties.of().instabreak().noOcclusion();
 		public static final BlockBehaviour.Properties CRYSTALLIZED_HONEY = BlockBehaviour.Properties.of().noOcclusion().friction(0.98F).strength(0.3F).sound(SoundType.GLASS);
 		public static final BlockBehaviour.Properties HONEYCOMB_BRICKS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(2.0F, 6.0F).sound(SoundType.CORAL_BLOCK);
 		public static final BlockBehaviour.Properties HONEYCOMB_DOOR = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties HONEYCOMB_TRAPDOOR = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY).isValidSpawn(PropertyUtil::never);
 
-		public static final BlockBehaviour.Properties SOUL_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SpecialCandleBlock.DIM_LIGHT_EMISSION);
+		public static final BlockBehaviour.Properties SOUL_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BROWN).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SpecialCandleBlock.DIM_LIGHT_EMISSION).pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties SOUL_CANDLE_CAKE = BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY).lightLevel(getLightValueLit(2));
 
-		public static final BlockBehaviour.Properties ENDER_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(CandleBlock.LIGHT_EMISSION);
+		public static final BlockBehaviour.Properties ENDER_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_PURPLE).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(CandleBlock.LIGHT_EMISSION).pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties ENDER_CANDLE_CAKE = BlockBehaviour.Properties.of().forceSolidOn().strength(0.5F).sound(SoundType.WOOL).pushReaction(PushReaction.DESTROY).lightLevel(getLightValueLit(3));
 
-		public static final BlockBehaviour.Properties CUPRIC_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SpecialCandleBlock.DIM_LIGHT_EMISSION);
+		public static final BlockBehaviour.Properties CUPRIC_CANDLE = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).noOcclusion().strength(0.1F).sound(SoundType.CANDLE).lightLevel(SpecialCandleBlock.DIM_LIGHT_EMISSION).pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties CUPRIC_CANDLE_CAKE = BlockBehaviour.Properties.copy(Blocks.CAKE).lightLevel(getLightValueLit(2));
 
 		private static ToIntFunction<BlockState> getLightValueLit(int lightValue) {
