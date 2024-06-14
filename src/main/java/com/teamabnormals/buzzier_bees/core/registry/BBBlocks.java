@@ -87,7 +87,7 @@ public class BBBlocks {
 	public static class BBBlockProperties {
 		public static final BlockSetType HONEYCOMB = BlockSetTypeRegistryHelper.register(new BlockSetType(BuzzierBees.MOD_ID + ":honeycomb", true, SoundType.CORAL_BLOCK, SoundEvents.WOODEN_DOOR_CLOSE, SoundEvents.WOODEN_DOOR_OPEN, SoundEvents.WOODEN_TRAPDOOR_CLOSE, SoundEvents.WOODEN_TRAPDOOR_OPEN, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_OFF, SoundEvents.WOODEN_PRESSURE_PLATE_CLICK_ON, SoundEvents.WOODEN_BUTTON_CLICK_OFF, SoundEvents.WOODEN_BUTTON_CLICK_ON));
 
-		public static final BlockBehaviour.Properties CRYSTALLIZED_HONEY = BlockBehaviour.Properties.of().noOcclusion().friction(0.98F).strength(0.3F).sound(SoundType.GLASS);
+		public static final BlockBehaviour.Properties CRYSTALLIZED_HONEY = BlockBehaviour.Properties.of().noOcclusion().friction(0.98F).strength(0.3F).sound(SoundType.GLASS).pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties HONEYCOMB_BRICKS = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(2.0F, 6.0F).sound(SoundType.CORAL_BLOCK);
 		public static final BlockBehaviour.Properties HONEYCOMB_DOOR = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY);
 		public static final BlockBehaviour.Properties HONEYCOMB_TRAPDOOR = BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_ORANGE).strength(3.0F).noOcclusion().pushReaction(PushReaction.DESTROY).isValidSpawn(PropertyUtil::never);
