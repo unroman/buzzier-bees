@@ -13,6 +13,8 @@ import com.teamabnormals.buzzier_bees.core.other.BBClientCompat;
 import com.teamabnormals.buzzier_bees.core.other.BBCompat;
 import com.teamabnormals.buzzier_bees.core.other.BBModelLayers;
 import com.teamabnormals.buzzier_bees.core.registry.*;
+import com.teamabnormals.gallery.core.data.client.GalleryAssetsRemolderProvider;
+import com.teamabnormals.gallery.core.data.client.GalleryItemModelProvider;
 import net.minecraft.client.model.CowModel;
 import net.minecraft.core.HolderLookup.Provider;
 import net.minecraft.data.DataGenerator;
@@ -82,18 +84,22 @@ public class BuzzierBees {
 		CompletableFuture<Provider> provider = event.getLookupProvider();
 		ExistingFileHelper helper = event.getExistingFileHelper();
 
-		boolean includeServer = event.includeServer();
+		boolean server = event.includeServer();
 		BBBlockTagsProvider blockTags = new BBBlockTagsProvider(output, provider, helper);
-		generator.addProvider(includeServer, blockTags);
-		generator.addProvider(includeServer, new BBItemTagsProvider(output, provider, blockTags.contentsGetter(), helper));
-		generator.addProvider(includeServer, new BBEntityTypeTagsProvider(output, provider, helper));
-		generator.addProvider(includeServer, new BBBiomeTagsProvider(output, provider, helper));
-		generator.addProvider(includeServer, new BBBannerPatternTagsProvider(output, provider, helper));
-		generator.addProvider(includeServer, new BBPaintingVariantTagsProvider(output, provider, helper));
-		generator.addProvider(includeServer, BBAdvancementProvider.create(output, provider, helper));
-		generator.addProvider(includeServer, new BBLootModifierProvider(output, provider));
-		generator.addProvider(includeServer, new BBAdvancementModifierProvider(output, provider));
-		generator.addProvider(includeServer, new BBDatapackBuiltinEntriesProvider(output, provider));
+		generator.addProvider(server, blockTags);
+		generator.addProvider(server, new BBItemTagsProvider(output, provider, blockTags.contentsGetter(), helper));
+		generator.addProvider(server, new BBEntityTypeTagsProvider(output, provider, helper));
+		generator.addProvider(server, new BBBiomeTagsProvider(output, provider, helper));
+		generator.addProvider(server, new BBBannerPatternTagsProvider(output, provider, helper));
+		generator.addProvider(server, new BBPaintingVariantTagsProvider(output, provider, helper));
+		generator.addProvider(server, BBAdvancementProvider.create(output, provider, helper));
+		generator.addProvider(server, new BBLootModifierProvider(output, provider));
+		generator.addProvider(server, new BBAdvancementModifierProvider(output, provider));
+		generator.addProvider(server, new BBDatapackBuiltinEntriesProvider(output, provider));
+
+		boolean client = event.includeClient();
+		generator.addProvider(client, new GalleryItemModelProvider(MOD_ID, output, helper));
+		generator.addProvider(client, new GalleryAssetsRemolderProvider(MOD_ID, output, provider));
 	}
 
 	@OnlyIn(Dist.CLIENT)

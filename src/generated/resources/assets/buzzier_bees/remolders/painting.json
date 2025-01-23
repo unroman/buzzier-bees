@@ -1,0 +1,16 @@
+{
+  "molding": "json",
+  "remolder": [
+    {
+      "type": "add",
+      "target": "overrides[]",
+      "value": {
+        "model": "buzzier_bees:item/painting/candle",
+        "predicate": {
+          "buzzier_bees:candle": 1.0
+        }
+      }
+    }
+  ],
+  "selector": "minecraft:models/item/painting"
+}
